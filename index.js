@@ -4,12 +4,20 @@ const handlebars = require('express-handlebars');
 const viewRouter = require('./src/routes/viewsRouter');
 const {Server} = require('socket.io');
 const {sockets} = require('./sockets');
+
+
+
+
+
 //Port
 const port = 8080;
+
+
 
 //Imports Routes
 const productsRouter = require('./src/routes/productsRouter');
 const cartsRouter = require('./src/routes/cartsRouter');
+const { objConfig } = require('./src/config/config');
 
 
 const app = express();
@@ -35,3 +43,6 @@ app.use(express.static(__dirname + '/src/public'))
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/', viewRouter);
+
+
+objConfig.connectDB()
