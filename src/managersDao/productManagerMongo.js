@@ -17,7 +17,7 @@ class Product {
       }
       await this.connectDb();
       const data = await productSchema.create({ ...product, timestamp: Date.now() });
-      mongoose.disconnect();
+      
       return data;
     } catch (error) {
       throw Error(error.message);
@@ -31,7 +31,7 @@ class Product {
       }
       await this.connectDb();
       const product = await productSchema.findById(id);
-      mongoose.disconnect();
+      
       return product;
     } catch (error) {
       throw Error(error.message);
@@ -45,7 +45,7 @@ class Product {
       }
       await this.connectDb();
       await productSchema.findByIdAndUpdate(id, newProduct);
-      mongoose.disconnect();
+      
     } catch (error) {
       throw Error(error.message);
     }
@@ -55,7 +55,7 @@ class Product {
     try {
       await this.connectDb();
       const products = await productSchema.find({});
-      mongoose.disconnect();
+      
       return products;
     } catch (error) {
       throw Error(error.message);
@@ -69,7 +69,7 @@ class Product {
       }
       await this.connectDb();
       await productSchema.findByIdAndRemove(id);
-      mongoose.disconnect();
+      
     } catch (error) {
       throw Error(error.message);
     }

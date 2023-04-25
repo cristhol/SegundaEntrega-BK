@@ -2,22 +2,24 @@
 const {Router} = require('express');
 const productsRouter = Router();
 
-//Imports de Controllers
 const {
-    getAllProducts,
-    getProdById,
-    addProduct,
+    getProducts,
+    createProduct,
+    getProductById,
     updateProductById,
-    deleteProdById,
-    }= require('../controllers/productsController.js');
-
-//Routes
-productsRouter.get('/', getAllProducts);
-productsRouter.get('/:pid', getProdById);
-
-productsRouter.post('/', addProduct);
-productsRouter.put('/:pid', updateProductById);
-productsRouter.delete('/:pid', deleteProdById);
+    deleteProductById,
+  } = require('../controllers/productsController');
+  
+  
+  productsRouter.get('/', getProducts);
+  
+  productsRouter.get('/:id', getProductById);
+  
+  productsRouter.post('/',  createProduct);
+  
+  productsRouter.put('/:id', updateProductById);
+  
+  productsRouter.delete('/:id', deleteProductById);
 
 //Export de routers
 module.exports = productsRouter;

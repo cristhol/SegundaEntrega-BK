@@ -1,53 +1,110 @@
-//Imports de clases
-const ProductManager = require('../productManager');
-const CartManager = require('../cartManager');
 
-//Path
-const path = require('path');
-const pathProd = path.join(`${__dirname}/../../src/db/products.json`);
 
-//Instancias de las clases
-let myCartManager = new CartManager();
-let myProductManager= new ProductManager(pathProd);
+const cartManagerMongo = require('../managersDao/cartManagerMongo');
+const Cart = new cartManagerMongo();
 
-//Creacion carrito
-const createCart = async (req, res)=>{
-    const cart = {
-        products: []
-    }
-    myCartManager.addCart(cart);
-    res.status(200).send('cart created');
-};
-
-//Obtengo el carrito por id
-const getCartId = async (req, res)=>{
-    const cid = req.params.cid;
-    const carts = await myCartManager.getCarts();
-    console.log('carts', carts);
-    let cart = carts.find((c) => c.id === Number(cid));
-    if(cart){
-        res.status(200).send(cart);
-    }else{
-        res.status(404).send(`Error: cart not found with id: ${cid}`);
-    };
-};
-
-//Obtengo el producto por id en el carrito seleccionado por id
-const getProductsByIdCart = async (req,res)=>{
-    const cid = req.params.cid;
-    const pid = req.params.pid;
-    let cart = await myCartManager.getCartById(Number(cid));
-    let product = await myProductManager.getProductById(Number(pid));
-    const productAdd = {
-        id: product.id,
-        quantity: 1
-    };
-    myCartManager.addToCart(cart, productAdd);
-    res.status(200).send('Product added to cart');
-};
-
-//Exports de las funciones
 module.exports = {
-    createCart,
-    getCartId,
-    getProductsByIdCart};
+  createCart: async (req, res) => {
+    try {
+      const cart = await Cart.createCart();
+      res.status(200).send({
+        status: 200,
+        data: {
+          cart,
+        },
+        message: 'Cart was created successfully',
+      });
+    } catch (error) {
+      res.status(500).send({
+        status: 500,
+        messages: error.message,
+      });
+    }
+  },
+  addProductToCart: async (req, res) => {
+    try {
+      if (!req.body.id) {
+        throw Error('You should add an product');
+      }
+      if (!req.params.id) {
+        throw Error('You should choose a cart');
+      }
+      const idCart = req.params.id;
+      const idProduct = req.body.id;
+      const cart = await Cart.addProductToCart(idCart, idProduct);
+      res.status(200).send({
+        status: 200,
+        data: cart,
+        message: 'Product was added to Cart successfully',
+      });
+    } catch (error) {
+      res.status(500).send({
+        status: 500,
+        messages: error.message,
+      });
+    }
+  },
+  getCartById: async (req, res) => {
+    const idCard = req.params.id;
+    try {
+      const data = await Cart.getCardById(idCard);
+      if (data) {
+        res.status(200).send({
+          status: 200,
+          data,
+          message: 'Card was obtained successfully',
+        });
+      } else {
+        res.status(404).send({
+          status: 404,
+          message: 'Card was not founded',
+        });
+      }
+    } catch (error) {
+      res.status(500).send({
+        status: 500,
+        messages: error.message,
+      });
+    }
+  },
+  deleteCartById: async (req, res) => {
+    const idCart = req.params.id;
+    try {
+      await Cart.deleteCartById(idCart);
+      res.status(200).send({
+        status: 200,
+        data: {
+          id: idCart,
+        },
+        message: 'Cart deleted successfully',
+      });
+    } catch (error) {
+      res.status(500).send({
+        status: 500,
+        messages: error.message,
+      });
+    }
+  },
+  deleteProductCart: async (req, res) => {
+    try {
+      if (!req.params.id) {
+        throw Error('You should add a product');
+      }
+      if (!req.params.idProd) {
+        throw Error('You should choose a cart');
+      }
+      const idCart = req.params.id;
+      const idProduct = req.params.idProd;
+      await Cart.deleteProductCart(idCart, idProduct);
+      res.status(200).send({
+        status: 200,
+        message: 'Product deleted from cart successfully',
+      });
+    } catch (error) {
+      res.status(500).send({
+        status: 500,
+        messages: error.message,
+      });
+    }
+  },
+};

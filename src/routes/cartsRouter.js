@@ -5,14 +5,22 @@ const cartsRouter = Router();
 //Imports de Controllers
 const {
     createCart,
-    getCartId,
-    getProductsByIdCart
-} = require('../controllers/cartsController.js')
-
-//Routes
-cartsRouter.post('/', createCart);
-cartsRouter.get('/:cid', getCartId);
-cartsRouter.post('/:cid/product/:pid', getProductsByIdCart )
+    addProductToCart,
+    getCartById,
+    deleteCartById,
+    deleteProductCart,
+  } = require('../controllers/cartsController');
+  
+  cartsRouter.post('/', createCart);
+  
+  cartsRouter.post('/:id/productos', addProductToCart);
+  
+  cartsRouter.get('/:id/productos', getCartById);
+  
+  cartsRouter.delete('/:id/productos', deleteCartById);
+  
+  cartsRouter.delete('/:id/productos/:idProd', deleteProductCart);
 
 //Export routers
 module.exports = cartsRouter;
+

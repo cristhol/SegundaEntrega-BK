@@ -15,7 +15,7 @@ class Cart {
         products: [],
         timestamp: Date.now(),
       });
-      mongoose.disconnect();
+
       return data;
     } catch (error) {
       throw Error(error.message);
@@ -33,7 +33,6 @@ class Cart {
         await CartSchema.updateOne({ _id: idCart }, { $push: { products: idProduct } });
         return;
       }
-      mongoose.disconnect();
       throw Error('Cart or Product does not exists');
     } catch (error) {
       throw Error(error.message);
@@ -47,7 +46,6 @@ class Cart {
       }
       await this.connectDb();
       const card = await CartSchema.findById(id);
-      mongoose.disconnect();
       return card;
     } catch (error) {
       throw Error(error.message);
@@ -60,7 +58,6 @@ class Cart {
       }
       await this.connectDb();
       await CartSchema.findByIdAndRemove(id);
-      mongoose.disconnect();
     } catch (error) {
       throw Error(error.message);
     }
@@ -74,7 +71,7 @@ class Cart {
       if (cardExist) {
         cardExist.products.pull(idProduct);
         await cardExist.save();
-        mongoose.disconnect();
+        
         return;
       }
     } catch (error) {
