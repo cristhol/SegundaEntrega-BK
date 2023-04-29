@@ -19,16 +19,11 @@ const objConfig = {
             console.log(error)
         }
        
-        // insertar las ordenes
-        // let result = await orderModel.insertMany(ordenes)
-
-         // solicitar las ordenes
-        // let result = await orderModel.find({})
-        // console.log(result)
-
+               
 
         
-    }    
+    }    ,
+    url: `mongodb+srv://cristholzmann:wDRhWvNen2HNfUdu@cluster0.2smy7qn.mongodb.net/?retryWrites=true&w=majority` 
 }
 
 module.exports = {
